@@ -3,10 +3,11 @@ from subprocess import call
 # for processing google text to speech URL
 from shlex import split
 #import facebook
-import weather
+from actions import weather
+from actions import switch
 #import directv
 #import gracenote
-import camera
+#import camera
 #import myemail
 #import textmessage
 
@@ -21,7 +22,7 @@ class Alfred:
 
     def says(self,message):
         "Alfred's response to queries"
-        command = split("/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols 'http://translate.google.com/translate_tts?tl=en&q=" + msg + "'")
+        command = split("/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols 'http://translate.google.com/translate_tts?tl=en&q=" + message + "'")
         call(command)
         print("alfred says: " + str(message))
 
@@ -36,8 +37,11 @@ class Alfred:
         "Alfred is summoned process command or record command"
         if re.search("weather|forecast", message):
             "handle weather here"
-            print("handling weather here")
             weather.handler(message, self)
+            return True
+        elif re.search("on|off", message):
+            "handle switch functions here"
+            switch.handler(message,self)
             return True
         elif re.search("/cancel|nevermind/", message):
             return True

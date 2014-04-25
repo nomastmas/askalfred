@@ -15,8 +15,9 @@ if __name__ == '__main__':
             mic.write_to_file(sample_width,sound_data)
             text = mic.get_text_from_google()
 
+            print(text)
             if(alfred.is_summoned(text)):
-                print(text)
+                alfred.says("okay, hold on")
                 while 1:
                     if (alfred.process_action(text)):
                         break

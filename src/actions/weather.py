@@ -48,6 +48,7 @@ def handler(text, alfred):
     location = fill_in_space(unprocessed_location)
     weather_json = get_json_data(location)
     temp_f = get_f_degrees(weather_json)
+    # exception KeyError for bad return data
     weather_desc = get_weather_desc(weather_json)
 
     message = "The weather for " + unprocessed_location + " is " + str(temp_f) + " degrees fahrenheit and " + weather_desc

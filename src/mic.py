@@ -31,13 +31,13 @@ class Mic():
         # spoken words always score over 2000, average around 5000 6-7 feet away
 
         # listening threshold denotes the min sound intensity to start recording
-        self.listening_threshold = 25000 
-        self.chunk_size = 1024
-        self.format = pyaudio.paInt16
-        self.rate = 16000
-        self.silence_threshold = 25000
+        self.listening_threshold    = 2000
+        self.silence_threshold      = 3000
+        self.rate                   = 16000
         # silence counter increases each time sound intensity dips below the silence threshold
-        self.silence_counter = 20
+        self.silence_counter        = 20
+        self.chunk_size             = 1024
+        self.format = pyaudio.paInt16
 
         #TODO have user set this path instead
         # file paths
@@ -167,3 +167,34 @@ class Mic():
             raise NoParsableSpeech("no parsable speech, try again...")
         except ValueError as e:
             raise NoParsableSpeech("no parsable speech, try again...")
+
+    def test_sound(self):
+        """
+        tool to test the sound intensity in the room
+        """
+        p = pyaudio.PyAudio()
+        stream = p.open(format=self.format, channels=1, rate=self.rate,
+                        input=True, output=True,
+                        frames_per_buffer=self.chunk_size)
+        num_silent = 0
+        snd_started = False
+        record_started = False
+
+        # 'h' specifies signed short int for array type
+        r = array('h')
+
+        try:
+            while 1:
+                # little endian, signed short
+                snd_data = array('h', stream.read(self.chunk_size))
+                if byteorder == 'big':
+                    snd_data.byteswap()
+
+                print(max(snd_data)) 
+
+        except KeyboardInterrupt as e:
+            print("ctrl+c caught, exiting gracefully like swan")
+            stream.stop_stream()
+            stream.close()
+            p.terminate()
+            return True
