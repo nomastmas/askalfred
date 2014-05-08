@@ -45,7 +45,7 @@ class Mic():
         self.flac_path = '/home/pi/audio/speech.flac'
 
         # google speech to text
-        self.speech_url = "https://www.google.com/speech-api/v1/recognize?xjerr=1&client=chromium&lang=en-US"
+        self.speech_url = "https://www.google.com/speech-api/v2/recognize?xjerr=1&client=chromium&lang=en-US"
         self.headers = {'Content-Type': 'audio/x-flac; rate=' + str(self.rate), 'User-Agent':'Mozilla/5.0'}
 
     def is_silent(self, snd_data):
@@ -152,13 +152,19 @@ class Mic():
 
     def get_text_from_google(self):
         print("getting text from google")
-        self.convert_wav_to_flac()
-        flac_file = open(self.flac_path, 'rb').read()
+        try:
+            self.convert_wav_to_flac()
+            flac_file = open(self.flac_path, 'rb').read()
 
-        # construct http request
-        request = urllib2.Request(self.speech_url, data=flac_file, headers=self.headers)
-        # get response
-        response = urllib2.urlopen(request)
+            # construct http request
+            request = urllib2.Request(self.speech_url, data=flac_file, headers=self.headers)
+            # get response
+            response = urllib2.urlopen(request)
+        except urllib2.HTTPError as e:
+            print("Exception caught: ")
+            print(e)
+            request.get_method()
+            exit(0)
         # get text from response
         #TODO consider case where audio file is so small there's nothing to send over (ie, tap on mic)
         try:
