@@ -11,6 +11,9 @@ if __name__ == '__main__':
         try:
             alfred.says("how can i help you?")
 
+            # try to have it as
+            # text = mic.record() 
+            # where it records your voice, and returns plain text
             sample_width, sound_data = mic.record()
             mic.write_to_file(sample_width,sound_data)
             text = mic.get_text_from_google()
@@ -19,7 +22,7 @@ if __name__ == '__main__':
             if(alfred.is_summoned(text)):
                 alfred.says("okay, hold on")
                 while 1:
-                    if (alfred.process_action(text)):
+                    if (alfred.respond_to(text)):
                         break
                     else:
                         alfred.says("pardon me?")

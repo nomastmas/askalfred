@@ -2,9 +2,10 @@ import re
 from subprocess import call
 # for processing google text to speech URL
 from shlex import split
-#import facebook
+import sys
 from actions import weather
 from actions import switch
+#import facebook
 #import directv
 #import gracenote
 #import camera
@@ -33,7 +34,7 @@ class Alfred:
         else:
             return False
 
-    def process_action(self, message):
+    def respond_to(self, message):
         "Alfred is summoned process command or record command"
         if re.search("weather|forecast", message):
             "handle weather here"
@@ -48,3 +49,19 @@ class Alfred:
 
         print("did not handle anything")
         return False
+
+if (__name__ == '__main__'):
+    print("testing single queries with Alfred")
+    
+    alfred = Alfred()
+    while (1):
+        try:
+            if (len(sys.argv) > 1):
+                query = sys.argv[1]
+            else:
+                query = raw_input("> ")
+            
+            alfred.respond_to(query)
+        except KeyboardInterrupt as e:
+            print("ctrl+c caught, exiting gracefully like swan")
+            exit(0)
