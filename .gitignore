@@ -1,0 +1,9 @@
+# ignore .pyc
+/*.pyc
+/src/*.pyc
+/src/actions/*.pyc
+
+# ignore swp files
+/*.swp
+/src/*.swp
+/src/actions/*.swp
