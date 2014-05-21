@@ -51,17 +51,25 @@ class Alfred:
         return False
 
 if (__name__ == '__main__'):
-    print("testing single queries with Alfred")
-    
+    print("testing simple queries with Alfred")
+
+    if (len(sys.argv) > 1):
+        single_query = True
+    else:
+        single_query = False
     alfred = Alfred()
     while (1):
         try:
-            if (len(sys.argv) > 1):
+            if (single_query):
                 query = sys.argv[1]
             else:
                 query = raw_input("> ")
             
             alfred.respond_to(query)
+
+            if (single_query):
+                exit(0)
+            
         except KeyboardInterrupt as e:
             print("ctrl+c caught, exiting gracefully like swan")
             exit(0)
