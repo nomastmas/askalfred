@@ -45,7 +45,7 @@ class Mic():
         self.flac_path = '/home/pi/audio/speech.flac'
 
         # google speech to text
-        self.speech_url = "https://www.google.com/speech-api/v2/recognize?xjerr=1&client=chromium&lang=en-US"
+        self.speech_url = "https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key=AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw"
         self.headers = {'Content-Type': 'audio/x-flac; rate=' + str(self.rate), 'User-Agent':'Mozilla/5.0'}
 
     def is_silent(self, snd_data):
@@ -159,7 +159,8 @@ class Mic():
             # construct http request
             request = urllib2.Request(self.speech_url, data=flac_file, headers=self.headers)
             # get response
-            response = urllib2.urlopen(request)
+            # need to split string because response contains two jsons
+            response = '\n'.join(urllib2.urlopen(request).read().split('\n')[1:])
         except urllib2.HTTPError as e:
             print("Exception caught: ")
             print(e)
@@ -168,7 +169,7 @@ class Mic():
         # get text from response
         #TODO consider case where audio file is so small there's nothing to send over (ie, tap on mic)
         try:
-            return json.loads(response.read())['hypotheses'][0]['utterance']
+            return json.loads(response)['result'][0]['alternative'][0]['transcript']
         except IndexError as e:
             raise NoParsableSpeech("no parsable speech, try again...")
         except ValueError as e:
