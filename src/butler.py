@@ -5,6 +5,7 @@ from shlex import split
 import sys
 from actions import weather
 from actions import switch
+from os import path
 #import facebook
 #import directv
 #import gracenote
@@ -20,10 +21,21 @@ class Alfred:
         # constants
         self.__name = "Alfred"
 
+        script_dir = path.dirname(path.realpath(__file__))
+        audio_dir = "/".join(script_dir.split('/')[:-1]) + "/audio"
+
+        self.okay_wav = audio_dir + "/okay.wav"
+        self.repeat_wav = audio_dir + "/repeat.wav"
+
 
     def says(self,message):
         "Alfred's response to queries"
-        command = split("/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols 'http://translate.google.com/translate_tts?tl=en&q=" + message + "'")
+        if (re.search("okay", message)):
+            command = split("/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols " + self.okay_wav)
+        elif (re.search("repeat", message)):
+            command = split("/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols " + self.repeat_wav)
+        else: 
+            command = split("/usr/bin/mplayer -ao alsa -really-quiet -noconsolecontrols 'http://translate.google.com/translate_tts?tl=en&q=" + message + "'")
         call(command)
         print("alfred says: " + str(message))
 
