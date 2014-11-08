@@ -1,5 +1,5 @@
 # for data structure order
-from os import remove
+from os import remove,path,makedirs
 from sys import byteorder
 from array import array
 from struct import pack
@@ -39,10 +39,14 @@ class Mic():
         self.chunk_size             = 1024
         self.format = pyaudio.paInt16
 
-        #TODO have user set this path instead
-        # file paths
-        self.wav_path = '/home/pi/audio/speech.wav'
-        self.flac_path = '/home/pi/audio/speech.flac'
+        # create path relative to script dir
+        script_dir = path.dirname(path.realpath(__file__))
+        audio_dir = "/".join(script_dir.split('/')[:-1]) + "/audio"
+        if not path.exists(audio_dir):
+            makedirs(audio_dir)
+
+        self.wav_path = audio_dir + "/speech.wav"
+        self.flac_path = audio_dir + "/speech.flac"
 
         # google speech to text
         self.speech_url = "https://www.google.com/speech-api/v2/recognize?output=json&lang=en-us&key=AIzaSyBOti4mM-6x9WDnZIjIeyEU21OpBXqWBgw"
