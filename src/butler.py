@@ -20,6 +20,7 @@ class Alfred:
         "I am alfred"
         # constants
         self.__name = "Alfred"
+        self.summoned = int(0)
 
         script_dir = path.dirname(path.realpath(__file__))
         audio_dir = "/".join(script_dir.split('/')[:-1]) + "/audio"
@@ -41,26 +42,33 @@ class Alfred:
 
     def is_summoned (self,message):
         "Alfred checks if he is summoned"
-        if re.search(self.__name, message):
+        if re.search(self.__name, message) or self.summoned:
+            self.summoned = 1
             return True
         else:
             return False
 
     def respond_to(self, message):
         "Alfred is summoned process command or record command"
-        if re.search("weather|forecast", message):
-            "handle weather here"
-            weather.handler(message, self)
-            return True
-        elif re.search("on|off", message):
-            "handle switch functions here"
-            switch.handler(message,self)
-            return True
-        elif re.search("/cancel|nevermind/", message):
-            return True
-
-        print("did not handle anything")
-        return False
+        status = False
+        if self.summoned:
+            if re.search("weather|forecast", message):
+                "handle weather here"
+                weather.handler(message, self)
+                status = True
+            elif re.search("on|off", message):
+                "handle switch functions here"
+                switch.handler(message,self)
+                status = True
+            elif re.search("/cancel|nevermind/", message):
+                status = True
+            else:
+                print("did not handle anything")
+                status = False
+            if (status):
+                "reset status once task is handled"
+                self.summoned = 0
+        return status
 
 if (__name__ == '__main__'):
     print("testing simple queries with Alfred")
