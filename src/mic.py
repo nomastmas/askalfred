@@ -74,6 +74,7 @@ class Mic():
                             frames_per_buffer=self.chunk_size)
 
             num_silent = 0
+            max_time = 0
             snd_started = False
             record_started = False
 
@@ -95,7 +96,6 @@ class Mic():
                     else:
                         continue;
 
-                #TODO start recording once silence is broken
                 r.extend(snd_data)
 
                 silent = self.is_silent(snd_data)
@@ -111,6 +111,11 @@ class Mic():
                 if snd_started and num_silent == self.silence_counter:
                     print("num_silent hit " + str(self.silence_counter) + ", abort")
                     break
+                if snd_started and max_time == 30:
+                    print("max time for query reached")
+                    max_time = 0
+                    break
+                max_time += 1
 
             # wtf is sample_width for?
             sample_width = p.get_sample_size(self.format)
