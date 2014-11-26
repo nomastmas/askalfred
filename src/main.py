@@ -7,9 +7,10 @@ if __name__ == '__main__':
     alfred = Alfred()
     mic = Mic()
     
-
+    counter = 0
     while 1:
         try:
+            counter += 1
             #TODO try to have it as
             # text = mic.record() 
             # where it records your voice, and returns plain text
@@ -21,6 +22,7 @@ if __name__ == '__main__':
             # |Alfred| |lights on|
             # |Alfred lights on|
             print("|| " + text + " ||")
+            print("|| " + str(counter) + " ||")
             if(not alfred.is_summoned(text)):
                 continue
         

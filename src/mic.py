@@ -100,6 +100,7 @@ class Mic():
 
                 silent = self.is_silent(snd_data)
 
+                #TODO restructure with if(snd_started) and elif(not snd_started)
                 if silent and snd_started:
                     num_silent += 1
                     print("silence: " + str(num_silent))
@@ -115,7 +116,8 @@ class Mic():
                     print("max time for query reached")
                     max_time = 0
                     break
-                max_time += 1
+                if snd_started:
+                    max_time += 1
 
             # wtf is sample_width for?
             sample_width = p.get_sample_size(self.format)

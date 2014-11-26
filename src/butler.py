@@ -51,6 +51,7 @@ class Alfred:
     def respond_to(self, message):
         "Alfred is summoned process command or record command"
         status = False
+        print (">>> summoned = " + str(self.summoned) + " <<<")
         if self.summoned:
             if re.search("weather|forecast", message):
                 "handle weather here"
@@ -85,7 +86,8 @@ if (__name__ == '__main__'):
             else:
                 query = raw_input("> ")
             
-            alfred.respond_to(query)
+            if(alfred.is_summoned(query)):
+                alfred.respond_to(query)
 
             if (single_query):
                 exit(0)
